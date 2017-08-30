@@ -83,11 +83,12 @@
 !     vareps_c  = props(1)  critical value of the internal energy
 !     len    = props(2)  regualrization length
 !     beta   = props(3)  kinetic modulus for phase field evolution
-!     k      = props(4)  Rest stiffness, ratio of remaining stiffness at failure
-!     Kbulk  = props(5)  Bulk modulus
-!     Gshear = props(6)  Young's modulus
-!     lmd_L  = props(7)  Locking stretch
-!     Ebar   = props(8)  Segment stretching modulus
+!     k_bond = props(4)  fraction of Ebar remaining at failure
+!     k_vol  = props(5)  fraction of Kbulk remaining at failure
+!     Kbulk  = props(6)  Bulk modulus
+!     Gshear = props(7)  Young's modulus
+!     lmd_L  = props(8)  Locking stretch
+!     Ebar   = props(9)  Segment stretching modulus
 !     --------------------------------------------------------------
 !     Integer properties
 !     nlSdv  = jprops(1) 
@@ -252,7 +253,7 @@ c     Check input data
       Call KCheckLflags(lflags)
 
       ! Check number of supplied real number properties
-      if (nprops .ne. (4+nmatprops)) then
+      if (nprops .ne. (5+nmatprops)) then
          write(*,*) 'Incorrect number of real number properties',
      &        ' for phase field element'
          call xit
@@ -276,11 +277,10 @@ c     ------------------------------------------------
       vareps_c = props(1)
       len      = props(2)
       beta     = props(3)
-      rest_stiffness = props(4)
       kappa = two*vareps_c*len**2
 
       ! mechanical material properties
-      matprops = props(5:nprops)
+      matprops = props(4:nprops)
 
 
       ! handle steady state case
@@ -484,7 +484,7 @@ c              internals = svars(4+jj:4+jj+ninternal-1)
          F_tau(3,3) = lam33
          
          ! degradation function
-         gfunc = (1.0d0 - phi_tau)**2 + rest_stiffness
+         gfunc = (1.0d0 - phi_tau)**2
 
          internals_old = internals
          

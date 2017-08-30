@@ -6,7 +6,7 @@
 !     
       module matdata
 
-      integer, parameter :: nmatprops = 4
+      integer, parameter :: nmatprops = 6
       integer, parameter :: ninternal = 3
       end module matdata
 ****************************************************************************
@@ -44,11 +44,12 @@
       call onem(Iden)
       
 !     rename material properties
-      Kbulk  = props(1)
-      Gshear = props(2)
-      lmd_L  = props(3)
-      Ebar   = props(4)
-      K2     = Kbulk*3.0d0 ! higher order bulk stiffness
+      k_bond = props(1)
+      k_vol  = props(2)
+      Kbulk  = props(3)
+      Gshear = props(4)
+      lmd_L  = props(5)
+      Ebar   = props(6)
 
 !     rename internal variables
       lmd_b0 = internal(1)
@@ -62,7 +63,7 @@
       I1 = Jm23*sum(F*F)
       lmd_bar = dsqrt(I1/3.d0)
 
-      Ebdam = gfunc*Ebar
+      Ebdam = (gfunc+k_bond)*Ebar
       call SolveBondStretch(lmd_bar,Ebdam,Gshear,lmd_L,lmd_b,status)
       if (status .ne. 0) then
          pnewdt = 0.25d0
@@ -82,8 +83,6 @@
 !     undamaged internal energy density due to bond stretch
       varepsilon_bond = varepsilon_star*Gshear*lmd_L**2
 !     undamaged volumetric internal energy
-c      varepsilon_vol = 0.5d0*Kbulk*(detF - 1.d0)**2
-c     &     + K2/4.d0*(detF - 1.d0)**4
       varepsilon_vol = Kbulk/8.d0*(detF**2 + detF**(-2) - 2.d0)
 
 !     total undamaged internal energy
@@ -96,21 +95,15 @@ c     &     + K2/4.d0*(detF - 1.d0)**4
      &     )
 
 !     total free energy density
-      psi = gfunc*varepsilon0 + psi_ent
+      psi = (gfunc+k_bond)*varepsilon_bond+(gfunc+k_vol)*varepsilon_vol
+     $     + psi_ent
 
 !     The following computations are for the actual (i.e., damaged)
 !     Piola stress and tangent operator.
 !     For convenience, reduce the bond stiffness and bulk
 !     modulus by the damage factor.
-      Kbulk = gfunc*Kbulk
-      Ebar  = gfunc*Ebar
-      K2    = gfunc*K2
-      
-      
-c      dpsidJ = Kbulk*(detF - 1.d0)
-c     &     + K2*(detF - 1.d0)**3
-c      d2psidJ2 = Kbulk
-c     &     + 3.d0*K2*(detF - 1.d0)**2 
+      Kbulk = (gfunc+k_vol)*Kbulk
+      Ebar  = (gfunc+k_bond)*Ebar
 
       dpsidJ = 0.25d0*Kbulk*(detF - detF**(-3)) 
       d2psidJ2 = 0.25d0*Kbulk*(1.d0 + 3.d0/detF**4)
