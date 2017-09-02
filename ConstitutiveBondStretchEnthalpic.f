@@ -31,7 +31,7 @@
       real(8) :: Tangents_dev(3,3,3,3), Tangents_vol(3,3,3,3)
       real(8) :: TR_dev(3,3), TR_vol(3,3), varepsilon_star
       real(8) :: varepsilon_bond, varepsilon_vol, varepsilon
-      real(8) :: Finv(3,3), detF, Iden(3,3), Ebdam, k_bulk, k_vol
+      real(8) :: Finv(3,3), detF, Iden(3,3), Ebdam, k_bond, k_vol
       real(8) :: Gshear,Kbulk,Ebar,lmd_L,PPFG,PPFGD,PPGG,beta,dbdx
       real(8) :: x,Jm23,psi_ent,dpsidJ,d2psidJ2
       real(8) :: A1,A2,A3,A4,A5,A6,dA5,dlmdbdI1,dy1dI1,dPsiDevdI1,d2bdx2
