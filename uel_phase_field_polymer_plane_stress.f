@@ -1,5 +1,5 @@
 #define STAGGERED 1
-#define TEST_MODE 0
+#define TEST_MODE 1
 !     set ONLY_DAMAGE_IN_TENSION to 1 for the asymmetric tension/compresion model
 !     set STAGGERED to 1 to use with the staggered solution approach.
 !     (Use with "*Solution technique, type=separated" in input file)
@@ -132,8 +132,8 @@
       !   debugger.      
 
       integer elemPt,numUvarm,elCount,err
-      integer, parameter :: numElem = 4
-      integer, parameter :: nInt = 1
+      integer, parameter :: numElem = 1
+      integer, parameter :: nInt = 4
       integer, parameter :: nDim = 2
       integer, parameter :: elOffset = 100000
       logical, save :: debug_wait = .false.
@@ -253,7 +253,7 @@ c     Check input data
       Call KCheckLflags(lflags)
 
       ! Check number of supplied real number properties
-      if (nprops .ne. (5+nmatprops)) then
+      if (nprops .ne. (3+nmatprops)) then
          write(*,*) 'Incorrect number of real number properties',
      &        ' for phase field element'
          call xit
