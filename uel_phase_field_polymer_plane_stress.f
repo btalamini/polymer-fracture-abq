@@ -227,7 +227,7 @@ c     quad point.
       real(8) :: TR_tau(3,3),T_tau(3,3),Tangents(3,3,3,3)
       real(8) :: xip(nDim),varpi,psi_tau,I1,lambda_bar
       real(8) :: d2psi_dF_dphi(3,3),H_tau,strain_energy_density
-      real(8) :: body(nDim),Iden(3,3),rest_stiffness
+      real(8) :: body(nDim),Iden(3,3)
       real(8) :: vareps0,vareps0_t,vareps0_tau,P33,lam33,press,C33
       real(8) :: matprops(nmatprops),dlam33,dlam33old,lam33L,lam33H
       real(8) :: P33L,P33H,detF2D,limitA,limitB,swap,res0,vd
@@ -684,7 +684,7 @@ c         end if
          globalSdv(12,intPt,jelem) = gfunc*vareps0_tau
          globalSdv(13,intPt,jelem) = strain_energy_density
          globalSdv(14,intPt,jelem) = psi_tau
-         globalSdv(15,intPt,jelem) = rest_stiffness*vareps0_tau
+         globalSdv(15,intPt,jelem) = vareps0_tau
          lambda_b = internals(2)
          globalSdv(16,intPt,jelem) = lambda_b
          
